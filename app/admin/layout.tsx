@@ -27,7 +27,9 @@ const AdminLayout = ({
         <Surface className="flex justify-end rounded-3xl p-4" variant="default">
           <LogoutButton />
         </Surface>
-        <div className="p-3">{children}</div>
+        <Surface className="mt-3 p-3 rounded-3xl" variant="transparent">
+          {children}
+        </Surface>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ const ProductCreate = () => {
   return (
     <div>
       <BackButton></BackButton>
-      <div>
+      <div className="mt-3">
         <FormProduct />
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import { ListBox } from "@heroui/react";
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 interface LayoutNavbarProps {
@@ -11,14 +11,24 @@ interface LayoutNavbarProps {
   }[];
 }
 const LayoutNavbar: React.FC<LayoutNavbarProps> = (props) => {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleAction = (key: string) => {
+    router.push(key);
+  };
   return (
     <ListBox>
       {props.items.map((item, i) => (
-        <ListBox.Item id={`nav-${i}`} key={`nav-${i}`} textValue={item.label}>
-          <Link href={item.href} className="flex gap-2 items-center">
-            {item.icon}
-            {item.label}
-          </Link>
+        <ListBox.Item
+          id={`nav-${i}`}
+          key={`nav-${i}`}
+          className={`flex gap-2 items-center ${pathname.startsWith(item.href) ? "bg-default" : ""}`}
+          textValue={item.label}
+          onAction={() => handleAction(item.href)}
+        >
+          {item.icon}
+          {item.label}
           <ListBox.ItemIndicator />
         </ListBox.Item>
       ))}
