@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
+import { Toast } from "@heroui/react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +15,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="light" className="light">
-      <body className="bg-background text-foreground min-h-dvh flex flex-col">{children}</body>
+      <body className="bg-background text-foreground min-h-dvh flex flex-col">
+        <NextTopLoader
+          color="#2563eb" // Warna progress bar atas
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false} // Matikan spinner bawaan karena kita akan buat layar loading penuh
+          shadow="0 0 10px #2563eb,0 0 5px #2563eb"
+        />
+        <Toast.Provider />
+        {children}
+      </body>
     </html>
   );
 }

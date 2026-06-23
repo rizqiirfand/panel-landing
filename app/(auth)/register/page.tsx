@@ -1,6 +1,6 @@
 "use client";
 
-import { registerUser } from "@/app/actions/auth/register";
+import { registerUser } from "@/actions/auth/register";
 import {
   Button,
   Card,
@@ -27,7 +27,6 @@ const RegisterPage = () => {
 
     try {
       const res = await registerUser(data.name, data.email, data.password);
-      console.log(res);
     } catch (error) {
       alert(error);
     }

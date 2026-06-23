@@ -1,5 +1,5 @@
 "use client";
-import { loginUser } from "@/app/actions/auth/login";
+import { loginUser } from "@/actions/auth/login";
 import { Button, Card, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 
 const LoginPage = () => {

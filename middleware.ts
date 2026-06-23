@@ -6,7 +6,6 @@ export default withAuth(
   function (req) {
     const { nextUrl, nextauth } = req;
     const isLoggedIn = !!nextauth.token;
-    console.log(isLoggedIn);
 
     // Cek apakah user mencoba mengakses halaman auth
     const isAuthPage = nextUrl.pathname === "/login" || nextUrl.pathname === "/register";

@@ -1,3 +1,4 @@
+"use server";
 import * as ProductRepositories from "@/repositories/product.repositories";
 
 export async function getAllProduct() {

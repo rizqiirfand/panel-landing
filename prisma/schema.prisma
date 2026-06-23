@@ -27,7 +27,7 @@ model Product {
   name        String
   description String?  @db.Text
 
-  price       Decimal  @db.Decimal(15,2)
+  price       Int  @default(0)
   stock       Int      @default(0)
 
   image       String?

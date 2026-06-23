@@ -9,11 +9,16 @@ import {
   NumberField,
   TextArea,
   TextField,
+  toast,
 } from "@heroui/react";
 import ImageInput from "../ui/image-input";
+import { createProduct } from "@/actions/product/create";
+import { FaUser } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const FormProduct = () => {
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data: Record<string, string> = {};
@@ -22,9 +27,43 @@ const FormProduct = () => {
     formData.forEach((value, key) => {
       data[key] = value.toString();
     });
-    console.log(formData.get("image"));
-
-    alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
+    try {
+      const res = await createProduct(formData);
+      if (res.success) {
+        toast("Success", {
+          actionProps: {
+            children: "Dismiss",
+            onPress: () => toast.clear(),
+            variant: "tertiary",
+          },
+          description: res.message,
+          variant: "success",
+        });
+        router.push("/admin/product");
+      } else {
+        toast("Error", {
+          actionProps: {
+            children: "Dismiss",
+            onPress: () => toast.clear(),
+            variant: "tertiary",
+          },
+          description: res.message,
+          indicator: <FaUser />,
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      toast("Error", {
+        actionProps: {
+          children: "Dismiss",
+          onPress: () => toast.clear(),
+          variant: "tertiary",
+        },
+        description: "res.message",
+        indicator: <FaUser />,
+        variant: "default",
+      });
+    }
   };
 
   return (

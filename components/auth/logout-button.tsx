@@ -1,6 +1,6 @@
 "use client";
 
-import { logoutUser } from "@/app/actions/auth/logout";
+import { logoutUser } from "@/actions/auth/logout";
 import { Button } from "@heroui/react";
 import { useState } from "react";
 
