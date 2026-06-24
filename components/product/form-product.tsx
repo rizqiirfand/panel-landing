@@ -14,10 +14,10 @@ import {
 import ImageInput from "../ui/image-input";
 import { createProduct } from "@/actions/product/create";
 import { FaUser } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import useNavigate from "@/hooks/use-navigate";
 
-const FormProduct = () => {
-  const router = useRouter();
+const FormProduct = (props: { flexLayout: "row" | "column" }) => {
+  const { navigateBack } = useNavigate();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -27,6 +27,7 @@ const FormProduct = () => {
     formData.forEach((value, key) => {
       data[key] = value.toString();
     });
+
     try {
       const res = await createProduct(formData);
       if (res.success) {
@@ -39,7 +40,7 @@ const FormProduct = () => {
           description: res.message,
           variant: "success",
         });
-        router.push("/admin/product");
+        navigateBack();
       } else {
         toast("Error", {
           actionProps: {
@@ -49,7 +50,7 @@ const FormProduct = () => {
           },
           description: res.message,
           indicator: <FaUser />,
-          variant: "default",
+          variant: "danger",
         });
       }
     } catch (error) {
@@ -61,15 +62,15 @@ const FormProduct = () => {
         },
         description: "res.message",
         indicator: <FaUser />,
-        variant: "default",
+        variant: "danger",
       });
     }
   };
 
   return (
     <Form className="" onSubmit={onSubmit}>
-      <div className="flex gap-4">
-        <div className="w-1/2 flex flex-col gap-4">
+      <div className={`${props.flexLayout == "row" ? "grid grid-cols-2" : "flex flex-col"} gap-4`}>
+        <div className={`flex flex-col gap-4`}>
           <div className="flex flex-col">
             <Label className="mb-2">Gambar Produk</Label>
             <ImageInput inputName={"image"} />
@@ -86,7 +87,7 @@ const FormProduct = () => {
             <TextArea id="textarea-description" rows={5} />
           </div>
         </div>
-        <div className="w-1/2 flex flex-col gap-4">
+        <div className={`flex flex-col gap-4`}>
           <NumberField defaultValue={0} minValue={0} name="stock" step={1}>
             <Label>Stok Produk</Label>
             <NumberField.Group className="flex">
@@ -116,7 +117,7 @@ const FormProduct = () => {
         </div>
       </div>
 
-      <div className="flex gap-2 justify-end text-end w-full">
+      <div className="flex gap-2 justify-end text-end w-full mt-4">
         <Button type="submit">Submit</Button>
       </div>
     </Form>

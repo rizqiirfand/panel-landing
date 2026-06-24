@@ -1,7 +1,18 @@
-import { Prisma } from "@/generated/prisma/client";
+"use client";
+import { getAllProduct } from "@/actions/product/get";
+import { ProductModel } from "@/generated/prisma/models";
 import { Table } from "@heroui/react";
+import { useEffect, useState } from "react";
 
-export const TableProduct = ({ data }: { data: Prisma.ProductModel[] }) => {
+export const TableProduct = () => {
+  const [data, setData] = useState<ProductModel[]>([]);
+  const fetchProduct = async () => {
+    const res = await getAllProduct();
+    setData(res);
+  };
+  useEffect(() => {
+    fetchProduct();
+  }, []);
   return (
     <div>
       <Table>

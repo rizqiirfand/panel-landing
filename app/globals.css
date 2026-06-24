@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "@heroui/styles";
-
+@layer components {
+  /* Override global button default styles */
+  .input,
+  .textarea,
+  .number-field__group {
+    @apply shadow-none! border border-neutral-300;
+  }
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

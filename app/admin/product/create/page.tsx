@@ -1,12 +1,14 @@
+"use client";
 import FormProduct from "@/components/product/form-product";
-import BackButton from "@/components/ui/back-button";
+import useNavigate from "@/hooks/use-navigate";
 
 const ProductCreate = () => {
+  const { renderComponentNavigate } = useNavigate();
   return (
     <div>
-      <BackButton></BackButton>
+      {renderComponentNavigate({ type: "back-button" })}
       <div className="mt-3">
-        <FormProduct />
+        <FormProduct flexLayout="row" />
       </div>
     </div>
   );

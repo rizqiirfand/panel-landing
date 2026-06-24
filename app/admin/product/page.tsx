@@ -1,16 +1,20 @@
-import { getAllProduct } from "@/actions/product/get";
-import { TableProduct } from "@/components/product/table-product";
-import { Button } from "@heroui/react";
-import Link from "next/link";
+"use client";
 
-export default async function Product() {
-  const data = await getAllProduct();
+import { TableProduct } from "@/components/product/table-product";
+import useNavigate from "@/hooks/use-navigate";
+
+export default function Product() {
+  const { renderComponentNavigate } = useNavigate();
   return (
     <div>
-      <Button>
-        <Link href={"product/create"}>Create</Link>
-      </Button>
-      <TableProduct data={data}></TableProduct>
+      <div className="mb-4">
+        {renderComponentNavigate({
+          type: "button",
+          target: "/admin/product/create",
+          children: "Create",
+        })}
+      </div>
+      <TableProduct></TableProduct>
     </div>
   );
 }

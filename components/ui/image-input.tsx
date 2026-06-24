@@ -13,7 +13,7 @@ const ImageInput: React.FC<{ inputName: string; required?: boolean }> = (props) 
 
   return (
     <div>
-      <Surface className="h-60 p-6 rounded-3xl shadow">
+      <Surface className="h-60 p-6 rounded-3xl border">
         <Dropzone
           multiple={false}
           onDrop={(acceptedFiles) => {

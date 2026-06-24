@@ -1,22 +1,20 @@
 "use client";
+import useNavigate from "@/hooks/use-navigate";
 import { ListBox } from "@heroui/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 
-interface LayoutNavbarProps {
+interface SidebarProps {
   items: {
     label: string;
     href: string;
     icon: React.ReactNode;
   }[];
 }
-const LayoutNavbar: React.FC<LayoutNavbarProps> = (props) => {
+const Sidebar: React.FC<SidebarProps> = (props) => {
   const pathname = usePathname();
-  const router = useRouter();
+  const { navigateTo } = useNavigate();
 
-  const handleAction = (key: string) => {
-    router.push(key);
-  };
   return (
     <ListBox>
       {props.items.map((item, i) => (
@@ -25,7 +23,7 @@ const LayoutNavbar: React.FC<LayoutNavbarProps> = (props) => {
           key={`nav-${i}`}
           className={`flex gap-2 items-center ${pathname.startsWith(item.href) ? "bg-default" : ""}`}
           textValue={item.label}
-          onAction={() => handleAction(item.href)}
+          onAction={() => navigateTo(item.href)}
         >
           {item.icon}
           {item.label}
@@ -36,4 +34,4 @@ const LayoutNavbar: React.FC<LayoutNavbarProps> = (props) => {
   );
 };
 
-export default LayoutNavbar;
+export default Sidebar;
