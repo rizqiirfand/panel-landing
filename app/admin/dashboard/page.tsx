@@ -1,5 +1,6 @@
 "use client";
 
+import { TableProduct } from "@/components/product/table-product";
 import useNavigate from "@/hooks/use-navigate";
 
 export default function Dashboard() {
@@ -12,6 +13,7 @@ export default function Dashboard() {
         target: "/admin/product/create",
         children: "Create Product",
       })}
+      <TableProduct limit={5} />
     </div>
   );
 }

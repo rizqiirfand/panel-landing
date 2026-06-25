@@ -1,70 +1,24 @@
 "use client";
 
-import {
-  Button,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  NumberField,
-  TextArea,
-  TextField,
-  toast,
-} from "@heroui/react";
+import { FieldError, Form, Input, Label, NumberField, TextArea, TextField } from "@heroui/react";
 import ImageInput from "../ui/image-input";
-import { createProduct } from "@/actions/product/create";
-import { FaUser } from "react-icons/fa";
 import useNavigate from "@/hooks/use-navigate";
+import useFormStateHandler from "@/hooks/use-form-state-handler";
+import { createProduct } from "@/actions/product/create";
+import LoadingButton from "../ui/loading-button";
 
 const FormProduct = (props: { flexLayout: "row" | "column" }) => {
   const { navigateBack } = useNavigate();
+  const { formIsLoading, submitForm } = useFormStateHandler();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data: Record<string, string> = {};
-
-    // Convert FormData to plain object
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
-    });
-
-    try {
-      const res = await createProduct(formData);
-      if (res.success) {
-        toast("Success", {
-          actionProps: {
-            children: "Dismiss",
-            onPress: () => toast.clear(),
-            variant: "tertiary",
-          },
-          description: res.message,
-          variant: "success",
-        });
+    submitForm({
+      dataForm: e.currentTarget,
+      api: createProduct,
+      onSucces: () => {
         navigateBack();
-      } else {
-        toast("Error", {
-          actionProps: {
-            children: "Dismiss",
-            onPress: () => toast.clear(),
-            variant: "tertiary",
-          },
-          description: res.message,
-          indicator: <FaUser />,
-          variant: "danger",
-        });
-      }
-    } catch (error) {
-      toast("Error", {
-        actionProps: {
-          children: "Dismiss",
-          onPress: () => toast.clear(),
-          variant: "tertiary",
-        },
-        description: "res.message",
-        indicator: <FaUser />,
-        variant: "danger",
-      });
-    }
+      },
+    });
   };
 
   return (
@@ -118,7 +72,9 @@ const FormProduct = (props: { flexLayout: "row" | "column" }) => {
       </div>
 
       <div className="flex gap-2 justify-end text-end w-full mt-4">
-        <Button type="submit">Submit</Button>
+        <LoadingButton isLoading={formIsLoading} type="submit">
+          Submit
+        </LoadingButton>
       </div>
     </Form>
   );

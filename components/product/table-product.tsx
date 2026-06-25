@@ -2,17 +2,32 @@
 import { getAllProduct } from "@/actions/product/get";
 import { ProductModel } from "@/generated/prisma/models";
 import { Table } from "@heroui/react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { TablePagination } from "../ui/table-pagination";
+import { PaginationResponseMetaType } from "@/lib/pagination";
 
-export const TableProduct = () => {
+export const TableProduct = ({ limit = 10 }: { limit?: number }) => {
+  const searchParams = useSearchParams();
   const [data, setData] = useState<ProductModel[]>([]);
-  const fetchProduct = async () => {
-    const res = await getAllProduct();
-    setData(res);
+  const [metaPagination, setMetaPagination] = useState<PaginationResponseMetaType>();
+
+  const initPage = () => {
+    const params = new URLSearchParams(searchParams);
+    let tempPage = params.get("page") ? Number(params.get("page")) : null;
+    fetchProduct({ page: tempPage ?? 1, limit });
   };
+
+  const fetchProduct = async ({ page, limit }: { page: number; limit: number }) => {
+    const res = await getAllProduct({ page, limit });
+    setData(res.data);
+    setMetaPagination(res.meta);
+  };
+
   useEffect(() => {
-    fetchProduct();
+    initPage();
   }, []);
+
   return (
     <div>
       <Table>
@@ -36,6 +51,20 @@ export const TableProduct = () => {
             </Table.Body>
           </Table.Content>
         </Table.ScrollContainer>
+        <Table.Footer>
+          {metaPagination && (
+            <TablePagination
+              onPageChange={(targetPage) => {
+                console.log(targetPage);
+                fetchProduct({ page: targetPage, limit });
+              }}
+              page={metaPagination.page}
+              itemsPerPage={metaPagination.perPage}
+              totalItems={metaPagination.totalItems}
+              totalPages={metaPagination.totalPages}
+            />
+          )}
+        </Table.Footer>
       </Table>
     </div>
   );
