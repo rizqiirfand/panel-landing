@@ -1,14 +1,16 @@
 "use client";
 import { getAllProduct } from "@/actions/product/get";
 import { ProductModel } from "@/generated/prisma/models";
-import { Table } from "@heroui/react";
+import { Skeleton, Table } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TablePagination } from "../ui/table-pagination";
 import { PaginationResponseMetaType } from "@/lib/pagination";
+import useFetchGet from "@/hooks/use-fetch-get";
 
 export const TableProduct = ({ limit = 10 }: { limit?: number }) => {
   const searchParams = useSearchParams();
+  const { isFetching, fetchGet } = useFetchGet(getAllProduct);
   const [data, setData] = useState<ProductModel[]>([]);
   const [metaPagination, setMetaPagination] = useState<PaginationResponseMetaType>();
 
@@ -19,7 +21,7 @@ export const TableProduct = ({ limit = 10 }: { limit?: number }) => {
   };
 
   const fetchProduct = async ({ page, limit }: { page: number; limit: number }) => {
-    const res = await getAllProduct({ page, limit });
+    const res = await fetchGet({ page, limit });
     setData(res.data);
     setMetaPagination(res.meta);
   };
@@ -40,14 +42,31 @@ export const TableProduct = ({ limit = 10 }: { limit?: number }) => {
               <Table.Column>Stock</Table.Column>
             </Table.Header>
             <Table.Body>
-              {data.map((d, i) => (
-                <Table.Row key={"key-table-product-row" + i}>
-                  <Table.Cell>{d.code}</Table.Cell>
-                  <Table.Cell>{d.name}</Table.Cell>
-                  <Table.Cell>{d.price}</Table.Cell>
-                  <Table.Cell>{d.stock}</Table.Cell>
-                </Table.Row>
-              ))}
+              {isFetching
+                ? [...Array(limit)].map((_, i) => (
+                    <Table.Row key={"key-table-product-row" + i}>
+                      <Table.Cell>
+                        <Skeleton className="h-3 rounded-lg" />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Skeleton className="h-3 rounded-lg" />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Skeleton className="h-3 rounded-lg" />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Skeleton className="h-3 rounded-lg" />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                : data.map((d, i) => (
+                    <Table.Row key={"key-table-product-row" + i}>
+                      <Table.Cell>{d.code}</Table.Cell>
+                      <Table.Cell>{d.name}</Table.Cell>
+                      <Table.Cell>{d.price}</Table.Cell>
+                      <Table.Cell>{d.stock}</Table.Cell>
+                    </Table.Row>
+                  ))}
             </Table.Body>
           </Table.Content>
         </Table.ScrollContainer>
@@ -55,7 +74,6 @@ export const TableProduct = ({ limit = 10 }: { limit?: number }) => {
           {metaPagination && (
             <TablePagination
               onPageChange={(targetPage) => {
-                console.log(targetPage);
                 fetchProduct({ page: targetPage, limit });
               }}
               page={metaPagination.page}
